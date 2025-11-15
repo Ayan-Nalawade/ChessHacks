@@ -29,7 +29,7 @@ import chess.pgn
 from huggingface_hub import snapshot_download
 from tqdm import tqdm
 
-REPO_ID = "official-stockfish/fishtest_pgns"
+DEFAULT_REPO_ID = "official-stockfish/fishtest_pgns"
 
 EVAL_TOKEN_RE = re.compile(r"\{([^}]*)\}")
 TIME_RE = re.compile(r"([0-9]+(?:\.[0-9]+)?)s")
@@ -148,10 +148,10 @@ def ensure_output_path(path: Path, overwrite: bool) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
 
 
-def download_subset(pattern: str, cache_dir: Path) -> Path:
+def download_subset(pattern: str, cache_dir: Path, repo_id: str) -> Path:
     """Download the requested subset of the dataset and return the local repo dir."""
     repo_dir = snapshot_download(
-        repo_id=REPO_ID,
+        repo_id=repo_id,
         repo_type="dataset",
         allow_patterns=pattern,
         local_dir=cache_dir,
@@ -164,13 +164,14 @@ def generate_samples(
     pattern: str,
     cache_dir: Path,
     output: Path,
+    repo_id: str = DEFAULT_REPO_ID,
     max_games: Optional[int] = None,
     max_positions: Optional[int] = None,
     position_cap: Optional[int] = 50000,
     overwrite: bool = False,
 ) -> int:
     ensure_output_path(output, overwrite)
-    repo_dir = download_subset(pattern, cache_dir)
+    repo_dir = download_subset(pattern, cache_dir, repo_id=repo_id)
     pgn_files = sorted(repo_dir.rglob("*.pgn.gz"))
     if not pgn_files:
         raise FileNotFoundError(f"No PGN files found for pattern {pattern}")
@@ -196,6 +197,7 @@ def main() -> None:
     parser.add_argument("--pattern", type=str, default="24-12-*/*/*.pgn.gz", help="HF Hub allow_pattern glob.")
     parser.add_argument("--cache-dir", type=Path, default=Path("model_dataset/raw"), help="Where to cache downloads.")
     parser.add_argument("--output", type=Path, default=Path("model_dataset/fishtest_samples.jsonl"))
+    parser.add_argument("--repo-id", type=str, default=DEFAULT_REPO_ID, help="Hugging Face dataset repo id.")
     parser.add_argument("--max-games", type=int, default=None, help="Limit number of games per file.")
     parser.add_argument("--max-positions", type=int, default=None, help="Limit number of moves per game.")
     parser.add_argument("--position-cap", type=int, default=50000, help="Stop after emitting this many samples.")
@@ -206,6 +208,7 @@ def main() -> None:
         pattern=args.pattern,
         cache_dir=args.cache_dir,
         output=args.output,
+        repo_id=args.repo_id,
         max_games=args.max_games,
         max_positions=args.max_positions,
         position_cap=args.position_cap,

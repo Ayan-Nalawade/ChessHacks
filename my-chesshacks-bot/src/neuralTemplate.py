@@ -2,7 +2,19 @@ import torch
 from chessModel import ChessModel
 import numpy as np
 import torch.optim as optim
-import torch.Functional as F
+import torch.nn.functional as F
+
+from tools import dotdict
+
+
+DEFAULT_ARGS = dotdict({
+    'lr': 1e-3,
+    'dropout': 0.3,
+    'epochs': 10,
+    'batch_size': 64,
+    'cuda': torch.cuda.is_available(),
+    'num_channels': 256,
+})
 
 class NeuralNet():
     """
@@ -142,3 +154,12 @@ class NeuralNet():
         checkpoint = torch.load(filepath, map_location=self.device)
         self.model.load_state_dict(checkpoint['model_state_dict'])
         print(f"Model loaded from {filepath}")
+
+
+class NNetWrapper(NeuralNet):
+    """
+    Compatibility wrapper so legacy training code can request `NNetWrapper`.
+    """
+
+    def __init__(self, game, args=None):
+        super().__init__(game, args or DEFAULT_ARGS)

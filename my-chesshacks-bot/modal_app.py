@@ -73,7 +73,7 @@ def build_dataset(
 
 @app.function(
     image=image,
-    gpu="T4",
+    gpu="H100",
     timeout=3600,
     volumes={"/model_storage": volume},
 )
