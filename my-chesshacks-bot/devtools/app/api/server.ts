@@ -27,6 +27,41 @@ function getServerCwd() {
   return path.join(process.cwd(), "..");
 }
 
+function resolvePythonExecutable() {
+  const envPython =
+    process.env.PYTHON_EXECUTABLE || process.env.PYTHON;
+  if (envPython) {
+    return envPython;
+  }
+
+  const serverCwd = getServerCwd();
+  const venvDir = path.join(serverCwd, "venv");
+  const candidates: string[] = [];
+
+  if (process.platform === "win32") {
+    candidates.push(path.join(venvDir, "Scripts", "python.exe"));
+    candidates.push("python");
+    candidates.push("py");
+  } else {
+    candidates.push(path.join(venvDir, "bin", "python3"));
+    candidates.push(path.join(venvDir, "bin", "python"));
+    candidates.push("python3");
+    candidates.push("python");
+  }
+
+  for (const candidate of candidates) {
+    if (candidate.includes(path.sep)) {
+      if (fs.existsSync(candidate)) {
+        return candidate;
+      }
+    } else {
+      return candidate;
+    }
+  }
+
+  return process.platform === "win32" ? "python" : "python3";
+}
+
 function setupWatcher() {
   if (watcher) {
     return;
@@ -90,8 +125,7 @@ function startServer() {
   }
 
   const serverCwd = getServerCwd();
-  const pythonExecutable =
-    process.env.PYTHON_EXECUTABLE || process.env.PYTHON || "python3";
+  const pythonExecutable = resolvePythonExecutable();
 
   setupWatcher();
 
