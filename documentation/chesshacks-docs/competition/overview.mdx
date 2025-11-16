@@ -1,0 +1,35 @@
+---
+title: Project Overview
+description: The primary goal of ChessHacks is to create the best AI chess engine possible.
+---
+
+### What "AI chess engine" means for ChessHacks
+
+An AI chess engine at ChessHacks is defined as a program that generates legal chess moves by leveraging a neural network as a critical component of the move generation process.
+
+#### Chess Engine Core Requirements
+
+<img src="https://github.com/ChessHacks/rules/blob/main/assets/allowed-vs-not-allowed.png?raw=true" alt="Allowed vs Not Allowed"/>
+
+1. **Neural Network Dependency**: Your engine must use a neural network as an essential step in move generation. The neural network should be a critical dependency - if you can remove the network and your engine still works, then you probably aren't depending on the network enough
+
+2. **Legal Move Generation**: Your program must generate legal chess moves according to standard chess rules. If your model generates illegal moves, it will be removed from the deployment pool.
+
+3. **Neural Network Integration**: The neural network must be meaningfully integrated into the decision-making process, not just a superficial addition.
+
+#### Examples of Allowed Approaches
+
+The size and architecture of your neural network is flexible. Valid approaches include:
+
+- **End-to-end models**: A model that takes the board state as input and directly outputs a move
+- **Search guidance**: A model that predicts promising moves to guide search algorithms (e.g., MCTS)
+- **Evaluation networks**: A lightweight evaluation network used within minimax-style search
+- **Fine-tuned language models**: An LLM fine-tuned specifically for chess move generation
+
+Of course, these are just examples and not the only valid approaches. You can use any approach you want, as long as it meets the core requirements and doesn't break the rules. If you are unsure about whether an approach is allowed, please ask in the Discord server.
+
+#### Not Allowed
+
+- **Pre-trained chess models**: Using models already trained on chess data (you must train your own)
+- **Existing engines**: Incorporating existing chess engines (like Stockfish) in your inference pipeline
+- **Non-neural approaches**: Classical chess engines without neural network components

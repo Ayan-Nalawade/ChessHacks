@@ -1,0 +1,59 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "aspen",
+  "name": "ChessHacks",
+  "colors": {
+    "primary": "#5D00FF",
+    "light": "#6D7FFF",
+    "dark": "#3B00B2"
+  },
+  "appearance": {
+    "default": "dark"
+  },
+  "background": {
+    "decoration": "gradient"
+  },
+  "favicon": "/favicon.svg",
+  "navigation": {
+    "pages": [
+      {
+        "group": "Getting Started",
+        "pages": ["introduction"]
+      },
+      {
+        "group": "Resources",
+        "pages": [
+          "resources/discord",
+          "resources/dashboard",
+          "resources/support"
+        ]
+      },
+      {
+        "group": "Competition",
+        "pages": [
+          "competition/overview",
+          "competition/rules",
+          "competition/judging",
+          "competition/prizes"
+        ]
+      }
+    ]
+  },
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "Discord",
+        "href": "https://discord.com/channels/1427343320484544644"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Dashboard",
+      "href": "https://chesshacks.dev/dashboard"
+    }
+  }
+}
